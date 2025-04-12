@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingHorizontal="10dp"
     android:background="@drawable/tab_background_selector">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -18,10 +19,14 @@
         android:layout_height="2dp"
         android:background="#818181"/>
     <LinearLayout
+        android:id="@+id/txtHomeManage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingVertical="10dp"
+        android:padding="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@drawable/ripple_custom"
         android:background="@drawable/background_home_popup2">
 
         <ImageView
@@ -32,12 +37,11 @@
             app:srcCompat="@drawable/baseline_settings_24" />
 
         <TextView
-            android:id="@+id/txtHomeManage"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="7"
-            android:clickable="true"
-            android:focusable="true"
+
             android:text="Manage Home"
             android:textColor="@color/black"
             android:textSize="20sp"/>

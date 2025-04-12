@@ -1,10 +1,9 @@
 package com.example.smarthome.model
 
-class Room(
-     val id:String,
-     val name: String,
-     val image: Int,
-     val deviceList:MutableList<String>
+data class Room(
+     var id:String="",
+     var name: String="",
+     var deviceList:MutableList<String> = mutableListOf()
 ) {
     public fun getNumDevice():Int{
         return deviceList.size;

@@ -35,7 +35,7 @@ class RoomListAdapter(private val items: List<Room>, private val onItemClick:(Ro
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = items[position];
-        holder.imgRoom.setImageResource(item.image);
+        holder.imgRoom.setImageResource(R.drawable.kitchen);
         holder.txtRoom.text = item.name;
         if(item.getNumDevice() < 2){
             holder.txtDevOfRoom.text = item.getNumDevice().toString()+" device";

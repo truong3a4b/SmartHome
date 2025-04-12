@@ -2,12 +2,11 @@ package com.example.smarthome.model
 
 
 class User(
-    val id:String,
-    val userName:String,
-    val password:String,
-    val email:String,
-    val realName:String,
-    val homeList:MutableList<String>
+    var id:String="",
+    var email:String="",
+    var name:String = "",
+    var homeList:MutableList<Cupbo> = mutableListOf(),
+
 ) {
     public fun getNumHome():Int{
         return homeList.size
