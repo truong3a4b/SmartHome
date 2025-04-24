@@ -19,8 +19,13 @@ class HomeRepo {
     fun getHomeById(homeId:String, onResult: (Home?) -> Unit, onError:(String) -> Unit){
         dbRef.child(homeId).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val home = snapshot.getValue(Home::class.java)
-                onResult(home)
+                if(snapshot.exists()){
+                    val home = snapshot.getValue(Home::class.java)
+                    onResult(home)
+                } else{
+                    onResult(null)
+                }
+
             }
 
             override fun onCancelled(error: DatabaseError) {

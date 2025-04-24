@@ -6,6 +6,7 @@ class User(
     var email:String="",
     var name:String = "",
     var homeList:MutableList<Cupbo> = mutableListOf(),
+    var homeCur:String = "ttt"
 
 ) {
     public fun getNumHome():Int{

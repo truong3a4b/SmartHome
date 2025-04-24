@@ -131,14 +131,16 @@ class RoomDetailActivity : AppCompatActivity() {
     }
 
     private fun checkOwner() {
+        binding.loadingOverlay.visibility = View.VISIBLE
         homeRepo.getHomeById(homeId,
             onResult = {home ->
                 if(home != null){
                     //La chu nha
                     if(userRepo.getUserIdCur().equals(home.ownerId)){
                         binding.btnAddDev.visibility = View.VISIBLE
-                        binding.btnDeleteRoom.visibility = View.VISIBLE
                         binding.btnEditRoomName.isClickable = true
+                        //NEu so luong =1 thi ko cho xoa
+                        checkNumRoom()
                     }else{
                         //Ko phai chu nha
                         binding.btnAddDev.visibility = View.GONE
@@ -146,14 +148,22 @@ class RoomDetailActivity : AppCompatActivity() {
                         binding.btnEditRoomName.isClickable = false
                     }
                 }
-
+                binding.loadingOverlay.visibility = View.GONE
             },
             onError = {
 
             }
         )
     }
-
+    fun checkNumRoom(){
+        val num = intent.getStringExtra("numRoom")?:""
+        val numRoom = num.toInt();
+        if(numRoom < 2){
+            binding.btnDeleteRoom.visibility = View.GONE
+        }else{
+            binding.btnDeleteRoom.visibility = View.VISIBLE
+        }
+    }
     private fun setRoomName() {
         roomRepo.getRoomById(roomId,
             onResult = {room ->

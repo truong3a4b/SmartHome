@@ -27,8 +27,13 @@ class UserRepo {
         val idUser = getUserIdCur();
         dbRef.child(idUser).addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                val user = snapshot.getValue(User::class.java)
-                onResult(user);
+                if(snapshot.exists()){
+                    val user = snapshot.getValue(User::class.java)
+                    onResult(user);
+                }else{
+                    onResult(null)
+                }
+
             }
 
             override fun onCancelled(error: DatabaseError) {

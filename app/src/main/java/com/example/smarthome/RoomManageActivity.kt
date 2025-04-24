@@ -67,13 +67,13 @@ class RoomManageActivity : AppCompatActivity() {
         binding.rvRoomListDetail.layoutManager = LinearLayoutManager(this)
         homeRepo.getRoomListId(homeId,
             onResult = { roomListId ->
-
                 roomRepo.getRoomList(roomListId,
                     onResult = { roomList ->
                         binding.rvRoomListDetail.adapter = RoomListDetailAdapter(roomList) { item ->
                             val intent = Intent(this,RoomDetailActivity::class.java);
                             intent.putExtra("roomId",item.id);
                             intent.putExtra("homeId",homeId);
+                            intent.putExtra("numRoom",roomList.size.toString());
                             startActivity(intent);
                         }
                         binding.loadingOverlay.visibility = View.GONE
@@ -122,8 +122,6 @@ class RoomManageActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun showAddRoomDialog() {
         binding.btnAddRoom.setOnClickListener{
             val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_room,null)
@@ -140,7 +138,6 @@ class RoomManageActivity : AppCompatActivity() {
                     edtRoomName.error = "Please enter name"
                 }else{
                     val idRoom = roomRepo.getKey();
-
                     val room = Room(idRoom,name, mutableListOf())
                     roomRepo.addRoom(room){ success ->
                         if(success){
@@ -151,7 +148,8 @@ class RoomManageActivity : AppCompatActivity() {
                                     if(home != null){
                                         home.roomList.add(room.id);
                                         homeRepo.addHome(home){check ->
-                                            if (check) showRoomListDetail()}
+                                            if (check) showRoomListDetail()
+                                        }
                                     }
                                 },
                                 onError = {

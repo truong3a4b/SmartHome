@@ -10,7 +10,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.smarthome.databinding.ActivityLoginBinding
 import com.example.smarthome.databinding.ActivityRegisterBinding
+import com.example.smarthome.model.Cupbo
+import com.example.smarthome.model.Home
+import com.example.smarthome.model.Room
 import com.example.smarthome.model.User
+import com.example.smarthome.respository.HomeRepo
+import com.example.smarthome.respository.RoomRepo
 import com.example.smarthome.respository.UserRepo
 import com.google.firebase.auth.FirebaseAuth
 
@@ -18,6 +23,8 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var userRepo: UserRepo
+    private lateinit var homeRepo: HomeRepo
+    private lateinit var roomRepo: RoomRepo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
@@ -25,7 +32,10 @@ class RegisterActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         userRepo = UserRepo();
-        binding.loadingOverlay.bringToFront()
+        homeRepo = HomeRepo();
+        roomRepo = RoomRepo();
+
+
         setCreateAcc();
         setGoLogin();
     }
@@ -44,13 +54,23 @@ class RegisterActivity : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@addOnCompleteListener
-                        val username = email.substringBefore("@")
-                        val user = User(uid,email,username)
-                        userRepo.createUser(user){};
-                        Toast.makeText(this, "Đăng ký thành công", Toast.LENGTH_SHORT).show()
-                        binding.loadingOverlay.visibility = View.GONE
-                        startActivity(Intent(this, LoginActivity::class.java))
-                        finish()
+                        val room = Room(roomRepo.getKey(),"Room", mutableListOf());
+                        roomRepo.addRoom(room){suc ->
+                            if(suc){
+                                val home = Home(homeRepo.getKey(),"Home",uid, mutableListOf(room.id), mutableListOf(Cupbo(uid,true)))
+                                homeRepo.addHome(home){cess ->
+                                    val username = email.substringBefore("@")
+                                    val user = User(uid,email,username, mutableListOf(Cupbo(home.id,true)))
+                                    userRepo.createUser(user){};
+                                    Toast.makeText(this, "Đăng ký thành công", Toast.LENGTH_SHORT).show()
+                                    binding.loadingOverlay.visibility = View.GONE
+                                    startActivity(Intent(this, LoginActivity::class.java))
+                                    finish()
+                                }
+                            }
+                        }
+
+
                     } else {
                         binding.loadingOverlay.visibility = View.GONE
                         Toast.makeText(this, "Lỗi: ${task.exception?.message}", Toast.LENGTH_SHORT).show()

@@ -1,10 +1,14 @@
 package com.example.smarthome.model
 
+import android.net.MacAddress
+
 data class Device(
-    val id:String ="",
-    val name:String="",
-    var type:DeviceType = DeviceType.LIGHT,
-    val status:DeviceStatus=DeviceStatus.ON,
+    var id:String ="",
+    var name:String="",
+    var macAddress:String = "",
+    var ipAddress: String = "",
+    var type:DeviceType = DeviceType.OTHER,
+    var status:DeviceStatus=DeviceStatus.UNKNOWN,
 ) {
 }
 

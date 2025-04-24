@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cameraContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#181717">
+
+    <!-- Camera preview -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"/>
+
+    <!-- Overlay chứa khung quét -->
+    <View
+        android:id="@+id/scanOverlay"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        android:background="@drawable/scan_box_border" />
+
+    <!-- Đường laser -->
+    <View
+        android:id="@+id/laserLine"
+        android:layout_width="300dp"
+        android:layout_height="2dp"
+        android:layout_gravity="center"
+        android:background="@android:color/holo_red_light"
+         />
+
+    <!-- TextView hiện kết quả -->
+    <TextView
+        android:id="@+id/qrResultText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chưa quét"
+        android:textSize="18sp"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:padding="16dp"
+        android:background="#AA000000"
+        android:textColor="#FFFFFF" />
+</FrameLayout>

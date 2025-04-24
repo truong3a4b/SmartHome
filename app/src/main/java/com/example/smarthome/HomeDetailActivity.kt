@@ -1,7 +1,5 @@
 package com.example.smarthome
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -22,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smarthome.adapter.UserListAdapter
 import com.example.smarthome.databinding.ActivityHomeDetailBinding
 import com.example.smarthome.model.Cupbo
-import com.example.smarthome.model.Home
 import com.example.smarthome.respository.HomeRepo
 import com.example.smarthome.respository.UserRepo
 
@@ -42,6 +39,7 @@ class HomeDetailActivity : AppCompatActivity() {
             showMember()
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeDetailBinding.inflate(layoutInflater)
@@ -67,23 +65,25 @@ class HomeDetailActivity : AppCompatActivity() {
         setRoomBtn();
     }
 
+
+
     private fun setRoomBtn() {
-        binding.btnRoomDev.setOnClickListener{
+        binding.btnRoomDev.setOnClickListener {
             val intent = Intent(this, RoomManageActivity::class.java);
-            intent.putExtra("homeId",homeId);
+            intent.putExtra("homeId", homeId);
             startActivity(intent);
         }
     }
 
     private fun setLeaveBtn() {
         binding.loadingOverlay.visibility = View.VISIBLE
-        binding.btnLeaveHome.setOnClickListener{
+        binding.btnLeaveHome.setOnClickListener {
             userRepo.getUserCur(
-                onResult = {user ->
-                    if(user != null){
+                onResult = { user ->
+                    if (user != null) {
                         homeRepo.getHomeById(homeId,
-                            onResult = {home ->
-                                if(home != null){
+                            onResult = { home ->
+                                if (home != null) {
                                     //Xoa home trong user
                                     user.homeList.removeIf {
                                         it.first.equals(
@@ -98,10 +98,14 @@ class HomeDetailActivity : AppCompatActivity() {
                                                     user.id
                                                 )
                                             }
-                                            homeRepo.addHome(home) {cess ->
-                                                if(cess){
+                                            homeRepo.addHome(home) { cess ->
+                                                if (cess) {
                                                     binding.loadingOverlay.visibility = View.GONE
-                                                    Toast.makeText(this, "Đã rời", Toast.LENGTH_SHORT).show()
+                                                    Toast.makeText(
+                                                        this,
+                                                        "Đã rời",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
                                                     finish();
                                                 }
                                             }
@@ -124,18 +128,20 @@ class HomeDetailActivity : AppCompatActivity() {
 
     private fun checkOwner() {
         homeRepo.getHomeById(homeId,
-            onResult = {home ->
-                if(home != null){
+            onResult = { home ->
+                if (home != null) {
                     //La chu nha
-                    if(userRepo.getUserIdCur().equals(home.ownerId)){
+                    if (userRepo.getUserIdCur().equals(home.ownerId)) {
                         binding.btnInvite.visibility = View.VISIBLE
                         binding.btnLeaveHome.visibility = View.GONE
                         binding.btnEditHomeName.isClickable = true
-                    }else{
+                        checkNumHome();
+                    } else {
                         //Ko phai chu nha
                         binding.btnInvite.visibility = View.GONE
                         binding.btnLeaveHome.visibility = View.VISIBLE
                         binding.btnEditHomeName.isClickable = false
+                        binding.btnDeleteHome.visibility = View.GONE
                     }
                 }
 
@@ -145,7 +151,15 @@ class HomeDetailActivity : AppCompatActivity() {
             }
         )
     }
-
+    private fun checkNumHome() {
+        val num = intent.getStringExtra("numHome") ?: ""
+        val numHome = num.toInt();
+        if (numHome < 2) {
+            binding.btnDeleteHome.visibility = View.GONE
+        } else{
+            binding.btnDeleteHome.visibility = View.VISIBLE
+        }
+    }
     private fun setInviteMember() {
 
         binding.btnInvite.setOnClickListener {
@@ -182,20 +196,25 @@ class HomeDetailActivity : AppCompatActivity() {
                                         onResult = { home ->
                                             if (home != null) {
                                                 home.sharedUsers.add(Cupbo(user.id, false));
-                                                homeRepo.addHome(home) {suc ->
-                                                    if(suc){
+                                                homeRepo.addHome(home) { suc ->
+                                                    if (suc) {
                                                         //them nha vao thanh vien o trang thai dc moi
                                                         user.homeList.add(Cupbo(homeId, false));
-                                                        userRepo.updateUser(user) {cess ->
-                                                            if(cess){
+                                                        userRepo.updateUser(user) { cess ->
+                                                            if (cess) {
                                                                 //sua lai nut bam
                                                                 btnInvite.setText("Invited")
                                                                 btnInvite.isClickable = false;
                                                                 btnInvite.setBackgroundResource(R.drawable.bg_google_button)
-                                                                btnInvite.setTextColor(Color.parseColor("#000000"))
+                                                                btnInvite.setTextColor(
+                                                                    Color.parseColor(
+                                                                        "#000000"
+                                                                    )
+                                                                )
                                                                 btnInvite.visibility = View.VISIBLE
 
-                                                                loadingOverlay.visibility = View.GONE
+                                                                loadingOverlay.visibility =
+                                                                    View.GONE
                                                             }
                                                         }
                                                     }
@@ -335,23 +354,19 @@ class HomeDetailActivity : AppCompatActivity() {
         homeRepo.getHomeById(homeId,
             onResult = { home ->
                 if (home != null) {
-                    if (home.ownerId.equals(userRepo.getUserIdCur())) {
-                        binding.btnDeleteHome.visibility = View.VISIBLE;
-                        binding.btnDeleteHome.setOnClickListener {
-                            binding.loadingOverlay.visibility = View.VISIBLE
-                            homeRepo.deleteHome(homeId) { success ->
-                                if (success) {
-                                    binding.loadingOverlay.visibility = View.GONE
-                                    Toast.makeText(this, "Da xoa", Toast.LENGTH_SHORT).show()
-                                    finish();
-                                } else {
-                                    return@deleteHome
-                                }
+                    binding.btnDeleteHome.setOnClickListener {
+                        binding.loadingOverlay.visibility = View.VISIBLE
+                        homeRepo.deleteHome(homeId) { success ->
+                            if (success) {
+                                binding.loadingOverlay.visibility = View.GONE
+                                Toast.makeText(this, "Da xoa", Toast.LENGTH_SHORT).show()
+                                finish();
+                            } else {
+                                return@deleteHome
                             }
                         }
-                    } else {
-                        binding.btnDeleteHome.visibility = View.GONE;
                     }
+
                 }
             },
             onError = {
@@ -380,7 +395,7 @@ class HomeDetailActivity : AppCompatActivity() {
                 }
                 userRepo.getUserList(userListId,
                     onResult = { userList ->
-                        binding.rvUserList.adapter = UserListAdapter(userList,homeId) { user ->
+                        binding.rvUserList.adapter = UserListAdapter(userList, homeId) { user ->
                             Toast.makeText(this, "You click", Toast.LENGTH_SHORT).show()
                         }
                         binding.loadingOverlay.visibility = View.GONE

@@ -168,7 +168,7 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="normal"
-            android:visibility="visible"
+            android:visibility="gone"
             android:foreground="@drawable/ripple_custom2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -8,11 +8,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smarthome.R
 import com.example.smarthome.model.Home
+import com.example.smarthome.respository.UserRepo
 
-class HomeListRecycleAdapter(private val items:List<Home>, private val onItemClick: (Home) -> Unit) : RecyclerView.Adapter<HomeListRecycleAdapter.MyViewHolder>(){
-    private var selectedPosition = 0
+class HomeListRecycleAdapter(private val items:List<Home>,private var selectedPosition:Int, private val onItemClick: (Home) -> Unit) : RecyclerView.Adapter<HomeListRecycleAdapter.MyViewHolder>(){
+
     inner class MyViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
         val txtHomeName: TextView = itemView.findViewById(R.id.txtHomeName);
+
+
         init {
             itemView.setOnClickListener {
                 val item = items[adapterPosition]

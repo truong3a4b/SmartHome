@@ -72,6 +72,7 @@ class HomeManageActivity : AppCompatActivity() {
                         binding.rvHomeListDetail.adapter = HomeListDetailAdapter(homeList){item ->
                             val intent = Intent(this, HomeDetailActivity::class.java)
                             intent.putExtra("homeId",item.id);
+                            intent.putExtra("numHome",homeList.size.toString())
                             startActivity(intent)
                         }
                         binding.loadingOverlay.visibility = View.GONE

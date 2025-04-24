@@ -1,6 +1,6 @@
 package com.example.smarthome.model
 
-data class Room(
+class Room(
      var id:String="",
      var name: String="",
      var deviceList:MutableList<String> = mutableListOf()

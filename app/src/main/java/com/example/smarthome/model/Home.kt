@@ -1,6 +1,6 @@
 package com.example.smarthome.model
 
-data class Home(
+class Home(
     var id:String = "",
     var name:String= "",
     var ownerId:String="",
