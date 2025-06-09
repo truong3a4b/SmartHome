@@ -62,16 +62,37 @@ class RoomRepo {
 
     fun deleteRoom(roomId: String,homeId:String, onComplete: (Boolean) -> Unit){
         val homeRepo = HomeRepo();
+        val deviceRepo = DeviceRepo();
+
         homeRepo.getHomeById(homeId,
             onResult = { home ->
                 if(home != null){
                     home.roomList.removeIf { it.equals(roomId) }
                     homeRepo.addHome(home){suc ->
                         if(suc){
-                            dbRef.child(homeId).removeValue()
-                                .addOnCompleteListener{task ->
-                                    onComplete(task.isSuccessful);
+                            getRoomById(roomId,
+                                onResult = {room ->
+                                    if(room != null){
+                                        val dbRefDev = FirebaseDatabase.getInstance().getReference("Device");
+                                        for(item in room.deviceList){
+                                            dbRefDev.child(item).removeValue()
+                                                .addOnCompleteListener{tak ->
+                                                    dbRef.child(roomId).removeValue()
+                                                        .addOnCompleteListener{task ->
+                                                            onComplete(task.isSuccessful);
+                                                        }
+                                                }
+
+                                        }
+
+
+                                    }
+                                },
+                                onError = {
+
                                 }
+                            )
+
                         }else{
                             onComplete(false)
                         }
@@ -85,6 +106,7 @@ class RoomRepo {
                 onComplete(false);
             }
         )
+
 
     }
 }

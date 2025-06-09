@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:fitsSystemWindows="true"
-        tools:context=".HomeManageActivity">
+        tools:context=".activity.HomeManageActivity">
 
         <LinearLayout
             android:id="@+id/linearLayout3"

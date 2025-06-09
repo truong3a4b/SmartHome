@@ -1,11 +1,10 @@
-package com.example.smarthome
+package com.example.smarthome.activity
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.smarthome.R
 import com.google.firebase.auth.FirebaseAuth
 
 class LaunchActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.example.smarthome
+package com.example.smarthome.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,18 +9,12 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.smarthome.databinding.ActivityLoginBinding
+import com.example.smarthome.R
 import com.example.smarthome.databinding.ActivityProfileBinding
-import com.example.smarthome.model.Home
-import com.example.smarthome.model.User
 import com.example.smarthome.respository.UserRepo
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.Dispatchers.Main
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding

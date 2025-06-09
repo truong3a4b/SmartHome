@@ -1,4 +1,4 @@
-package com.example.smarthome
+package com.example.smarthome.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,7 +12,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.smarthome.R
+import com.example.smarthome.adapter.DeviceListRoomAdapter
 import com.example.smarthome.databinding.ActivityRoomDetailBinding
+import com.example.smarthome.respository.DeviceRepo
 import com.example.smarthome.respository.HomeRepo
 import com.example.smarthome.respository.RoomRepo
 import com.example.smarthome.respository.UserRepo
@@ -25,6 +29,7 @@ class RoomDetailActivity : AppCompatActivity() {
     private lateinit var roomRepo: RoomRepo
     private lateinit var homeRepo: HomeRepo;
     private lateinit var userRepo: UserRepo;
+    private lateinit var deviceRepo: DeviceRepo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -37,13 +42,25 @@ class RoomDetailActivity : AppCompatActivity() {
         roomRepo = RoomRepo();
         homeRepo = HomeRepo();
         userRepo = UserRepo();
+        deviceRepo = DeviceRepo();
+
 
         setRoomName();
         checkOwner();
         showEditNameRoom();
+        setBtnAddDev();
         setDeleteBtn();
         setBack();
     }
+
+    private fun setBtnAddDev() {
+        binding.btnAddDev.setOnClickListener{
+            val intent = Intent(this,AddDeviceActivity::class.java);
+            intent.putExtra("homeId",homeId)
+            startActivity(intent);
+        }
+    }
+
 
     private fun setBack() {
         binding.btnBackToRoomManage.setOnClickListener{
@@ -169,7 +186,25 @@ class RoomDetailActivity : AppCompatActivity() {
             onResult = {room ->
                 if(room != null){
                     binding.txtRoomName.text = room.name
+                    showDeviceList(room.deviceList)
                 }
+            },
+            onError = {
+
+            }
+        )
+    }
+    private fun showDeviceList(deviceListId:List<String>) {
+        binding.rvDeviceList.layoutManager = LinearLayoutManager(this)
+        deviceRepo.getDeviceList(deviceListId,
+            onResult = {deviceList ->
+                binding.rvDeviceList.adapter = DeviceListRoomAdapter(deviceList){item ->
+                    val intent = Intent(this, LightDeviceActivity::class.java)
+                    intent.putExtra("IP",item.ipAddress);
+                    intent.putExtra("MAC",item.macAddress);
+                    startActivity(intent)
+                }
+                binding.loadingOverlay.visibility = View.GONE
             },
             onError = {
 

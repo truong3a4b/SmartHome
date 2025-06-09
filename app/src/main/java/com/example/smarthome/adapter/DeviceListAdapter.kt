@@ -1,5 +1,6 @@
 package com.example.smarthome.adapter
 
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +19,12 @@ class DeviceListAdapter(private val items:List<Device>, private val onItemClick:
 
         init {
             itemView.setOnClickListener {
+                itemView.isClickable=false;
                 val item = items[adapterPosition]
                 onItemClick(item)
-
+                Handler().postDelayed({
+                    itemView.isClickable = true
+                }, 2000)
             }
         }
     }

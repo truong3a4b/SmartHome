@@ -1,4 +1,4 @@
-package com.example.smarthome
+package com.example.smarthome.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -39,7 +39,7 @@ class NotiActivity : AppCompatActivity() {
 
     private fun goBack() {
         binding.btnBackToHome.setOnClickListener{
-            val intent = Intent(this,MainActivity::class.java);
+            val intent = Intent(this, MainActivity::class.java);
             startActivity(intent);
             finish();
         }

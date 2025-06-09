@@ -1,0 +1,19 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Bóng đổ -->
+    <item android:top="4dp" android:left="4dp">
+        <shape android:shape="oval">
+            <size android:width="16dp" android:height="16dp" />
+            <solid android:color="#55E2E2E2" /> <!-- màu đen mờ -->
+        </shape>
+    </item>
+
+    <!-- Thumb chính -->
+    <item>
+        <shape android:shape="oval">
+            <size android:width="16dp" android:height="16dp" />
+            <solid android:color="#FFFFFF" /> <!-- trắng -->
+        </shape>
+    </item>
+
+</layer-list>

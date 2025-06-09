@@ -1,4 +1,4 @@
-package com.example.smarthome
+package com.example.smarthome.activity
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -18,6 +18,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.smarthome.R
 
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage

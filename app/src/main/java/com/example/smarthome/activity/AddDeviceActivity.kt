@@ -1,4 +1,4 @@
-package com.example.smarthome
+package com.example.smarthome.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -12,6 +12,7 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -25,15 +26,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.Visibility
+import com.example.smarthome.R
 import com.example.smarthome.adapter.DeviceListAdapter
 import com.example.smarthome.databinding.ActivityAddDeviceBinding
 import com.example.smarthome.model.Device
+import com.example.smarthome.respository.DeviceRepo
+import com.example.smarthome.respository.HomeRepo
+import com.example.smarthome.respository.RoomRepo
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.UUID
-import kotlin.jvm.Throws
 
 class AddDeviceActivity : AppCompatActivity() {
     private lateinit var binding:ActivityAddDeviceBinding
@@ -45,6 +48,11 @@ class AddDeviceActivity : AppCompatActivity() {
     private var deviceSelected:Device?=null;
     private lateinit var deviceAdapter: DeviceListAdapter
     private val deviceList = mutableListOf<Device>()
+    private lateinit var homeRepo: HomeRepo
+    private lateinit var roomRepo: RoomRepo
+    private lateinit var deviceRepo: DeviceRepo
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddDeviceBinding.inflate(layoutInflater)
@@ -52,6 +60,10 @@ class AddDeviceActivity : AppCompatActivity() {
 
         homeId = intent.getStringExtra("homeId") ?: "";
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        homeRepo = HomeRepo();
+        roomRepo = RoomRepo();
+        deviceRepo = DeviceRepo();
 
         checkBluetoothPermissions();
         checkEnableBluetooth();
@@ -156,7 +168,11 @@ class AddDeviceActivity : AppCompatActivity() {
     private fun showDeviceDectected() {
         deviceAdapter = DeviceListAdapter(deviceList) { device ->
             deviceSelected = device;
-            connectToDevice(device.macAddress)
+            binding.loadingOverlay.visibility = View.VISIBLE
+            Handler().postDelayed({
+                connectToDevice(device.macAddress)
+            }, 1000)
+
         }
         binding.rvDeviceList.layoutManager = LinearLayoutManager(this);
         binding.rvDeviceList.adapter = deviceAdapter;
@@ -206,12 +222,16 @@ class AddDeviceActivity : AppCompatActivity() {
             bluetoothSocket?.connect()
 
             Toast.makeText(this, "Đã kết nối tới ${device.name}", Toast.LENGTH_SHORT).show()
+            binding.loadingOverlay.visibility = View.GONE
+
             //Hien dialog de ket noi wifi cho thiet bi
             showDialog();
+
         }
         catch (e: IOException){
             e.printStackTrace()
             Toast.makeText(this, "Kết nối thất bại: ${e.message}", Toast.LENGTH_SHORT).show()
+            binding.loadingOverlay.visibility = View.GONE
             try {
                 bluetoothSocket?.close()
             } catch (closeException: IOException) {
@@ -219,7 +239,6 @@ class AddDeviceActivity : AppCompatActivity() {
             }
         }
 
-        binding.loadingOverlay.visibility = View.GONE
     }
 
     //Hien dialog de nhap thong tin wifi
@@ -289,6 +308,10 @@ class AddDeviceActivity : AppCompatActivity() {
                     }
                 }catch (e:IOException){
                     e.printStackTrace()
+                    runOnUiThread {
+                        Toast.makeText(this, "ESP32: Connect Fail!", Toast.LENGTH_SHORT).show()
+                        binding.loadingOverlay.visibility = View.GONE
+                    }
                     break
                 }
             }
@@ -305,12 +328,17 @@ class AddDeviceActivity : AppCompatActivity() {
 
                             runOnUiThread {
                                 Toast.makeText(this, "ESP32: $fullMessage", Toast.LENGTH_SHORT).show()
-                                deviceSelected!!.ipAddress = fullMessage;
-                                val intent = Intent(this,SelectRoomActivity::class.java);
+                                Log.d("IPPP",fullMessage);
+                                val ip = fullMessage.substringBefore("###");
+                                val type = fullMessage.substringAfter("###");
+                                deviceSelected!!.ipAddress = ip;
+
+                                val intent = Intent(this, SelectRoomActivity::class.java);
                                 intent.putExtra("homeId",homeId);
                                 intent.putExtra("name",deviceSelected!!.name);
                                 intent.putExtra("MAC",deviceSelected!!.macAddress);
                                 intent.putExtra("IP",deviceSelected!!.ipAddress);
+                                intent.putExtra("TYPE",type);
                                 startActivity(intent);
                                 binding.loadingOverlay.visibility = View.GONE
 

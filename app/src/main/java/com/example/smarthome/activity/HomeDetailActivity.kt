@@ -1,4 +1,4 @@
-package com.example.smarthome
+package com.example.smarthome.activity
 
 import android.content.Intent
 import android.graphics.Color
@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.smarthome.R
 import com.example.smarthome.adapter.UserListAdapter
 import com.example.smarthome.databinding.ActivityHomeDetailBinding
 import com.example.smarthome.model.Cupbo

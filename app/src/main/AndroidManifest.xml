@@ -31,37 +31,49 @@
         android:theme="@style/Theme.SmartHome"
         tools:targetApi="31">
         <activity
-            android:name=".SelectRoomActivity"
+            android:name=".activity.TVControlActivity"
             android:exported="false" />
         <activity
-            android:name=".QRScanActivity"
+            android:name=".activity.APmodeActivity"
             android:exported="false" />
         <activity
-            android:name=".AddDeviceActivity"
+            android:name=".activity.DevicesInRoomActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.LightDeviceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.SelectRoomActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.QRScanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.AddDeviceActivity"
             android:exported="false" />
         <activity
             android:name=".TestActivity"
             android:exported="false" />
         <activity
-            android:name=".RoomDetailActivity"
+            android:name=".activity.RoomDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".RoomManageActivity"
+            android:name=".activity.RoomManageActivity"
             android:exported="false" />
         <activity
-            android:name=".NotiActivity"
+            android:name=".activity.NotiActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeDetailActivity"
+            android:name=".activity.HomeDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ProfileActivity"
+            android:name=".activity.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activity.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".LaunchActivity"
+            android:name=".activity.LaunchActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -70,13 +82,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeManageActivity"
+            android:name=".activity.HomeManageActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="false" />
 
         <meta-data

@@ -2,8 +2,23 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+    id("org.jetbrains.kotlin.kapt")
+    id("org.sonarqube") version "6.2.0.5505"
 }
 
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "smarthome_1")
+        property("sonar.projectName", "smarthome")
+        property("sonar.sourceEncoding", "UTF-8")
+        property("sonar.language", "kotlin")
+        property("sonar.sources", "src/main/java")
+        property("sonar.tests", "src/test/java")
+        property("sonar.host.url", "http://localhost:9000")
+        property("sonar.login", "sqp_0ed9fc223b833edec12439f2fb4fffa6823276fa")
+    }
+}
 android {
     namespace = "com.example.smarthome"
     compileSdk = 35
@@ -57,6 +72,10 @@ dependencies {
     implementation("androidx.camera:camera-camera2:1.1.0")
     implementation("androidx.camera:camera-lifecycle:1.1.0")
     implementation("androidx.camera:camera-view:1.0.0-alpha32")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    kapt("com.github.bumptech.glide:compiler:4.15.1")
     implementation(libs.androidx.swiperefreshlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

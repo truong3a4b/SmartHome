@@ -1,4 +1,4 @@
-package com.example.smarthome
+package com.example.smarthome.activity
 
 
 import android.content.Intent
@@ -13,11 +13,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.smarthome.R
 import com.example.smarthome.adapter.HomeListDetailAdapter
 import com.example.smarthome.databinding.ActivityHomeManageBinding
 import com.example.smarthome.model.Cupbo
 import com.example.smarthome.model.Home
+import com.example.smarthome.model.Room
+import com.example.smarthome.model.User
 import com.example.smarthome.respository.HomeRepo
+import com.example.smarthome.respository.RoomRepo
 import com.example.smarthome.respository.UserRepo
 
 
@@ -26,6 +30,7 @@ class HomeManageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeManageBinding
     private lateinit var homeRepo:HomeRepo
     private lateinit var userRepo: UserRepo
+    private lateinit var roomRepo: RoomRepo
     private var firstLoad = true;
 
     override fun onResume() {
@@ -47,7 +52,7 @@ class HomeManageActivity : AppCompatActivity() {
         //khoi tao classHomeRepo
         homeRepo = HomeRepo();
         userRepo = UserRepo();
-
+        roomRepo = RoomRepo();
         setBackToHome();
         showAddHomeDialog();
         showHomeListDetail()
@@ -63,7 +68,6 @@ class HomeManageActivity : AppCompatActivity() {
                 for(item in itemsHome){
                     if(item.second){
                         homeListId.add(item.first);
-                        Log.d("home","${item.first}")
                     }
 
                 }
@@ -79,14 +83,13 @@ class HomeManageActivity : AppCompatActivity() {
                         binding.swipeRefresh.isRefreshing=false;
                     },
                     onError = {err ->
-                        Log.e("Home", "Lỗi: $err")
                         binding.swipeRefresh.isRefreshing=false;
                         binding.loadingOverlay.visibility = View.GONE
                     }
                 )
             },
             onError = {err->
-                Log.e("User", "Lỗi: $err")
+
                 binding.swipeRefresh.isRefreshing=false;
                 binding.loadingOverlay.visibility = View.GONE
             }
@@ -114,21 +117,24 @@ class HomeManageActivity : AppCompatActivity() {
                 }else{
                     val idHome = homeRepo.getKey();
                     val idUser = userRepo.getUserIdCur();
-                    val home = Home(idHome,name,idUser, mutableListOf(), mutableListOf(Cupbo(idUser,true)))
-                    homeRepo.addHome(home){ success ->
-                        if(success){
-                            Toast.makeText(this, "Thêm thành công", Toast.LENGTH_SHORT).show()
-                            //update home vao user
-                            userRepo.addHometoUser(idHome,true){check ->
-                                if (check) showHomeListDetail()
-                            }
+                    val room = Room(roomRepo.getKey(),"Room", mutableListOf());
+                    roomRepo.addRoom(room){suc ->
+                        if(suc){
+                            val home = Home(idHome,name,idUser, mutableListOf(room.id), mutableListOf(Cupbo(idUser,true)))
+                            homeRepo.addHome(home){success ->
+                                if(success){
+                                    Toast.makeText(this, "Thêm thành công", Toast.LENGTH_SHORT).show()
+                                    //update home vao user
+                                    userRepo.addHometoUser(idHome,true){check ->
+                                        if (check) showHomeListDetail()
+                                    }
 
-                        } else {
-                            Toast.makeText(this, "Thêm thất bại", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(this, "Thêm thất bại", Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         }
                     }
-
-
                     dialog.dismiss();
                 }
             }

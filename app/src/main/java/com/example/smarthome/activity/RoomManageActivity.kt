@@ -1,4 +1,4 @@
-package com.example.smarthome
+package com.example.smarthome.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,18 +9,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smarthome.adapter.HomeListDetailAdapter
+import com.example.smarthome.R
 import com.example.smarthome.adapter.RoomListDetailAdapter
-import com.example.smarthome.databinding.ActivityNotiBinding
 import com.example.smarthome.databinding.ActivityRoomManageBinding
-import com.example.smarthome.model.Cupbo
-import com.example.smarthome.model.Home
 import com.example.smarthome.model.Room
 import com.example.smarthome.respository.HomeRepo
 import com.example.smarthome.respository.RoomRepo
@@ -70,7 +64,7 @@ class RoomManageActivity : AppCompatActivity() {
                 roomRepo.getRoomList(roomListId,
                     onResult = { roomList ->
                         binding.rvRoomListDetail.adapter = RoomListDetailAdapter(roomList) { item ->
-                            val intent = Intent(this,RoomDetailActivity::class.java);
+                            val intent = Intent(this, RoomDetailActivity::class.java);
                             intent.putExtra("roomId",item.id);
                             intent.putExtra("homeId",homeId);
                             intent.putExtra("numRoom",roomList.size.toString());
